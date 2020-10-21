@@ -1,0 +1,25 @@
+version: "3"
+services:
+  notification-service:
+    build:
+      context: "."
+      dockerfile: "Dockerfile"
+    depends_on:
+      - notification-service-db
+    environment:
+      - DB_URI=postgres://postgres:password@notification-service-db/db?charset=UTF8
+    ports:
+      - "7000:7000"
+      - "9229:9229"
+    volumes:
+      - ./:/opt/app
+
+  notification-service-db:
+    image: postgres:12.4
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=db
+    ports:
+      - 0.0.0.0:7200:5432
+    volumes:
+      - /opt/notification-service-db:/var/lib/postgresql/data
